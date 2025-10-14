@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Tickets</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    body{font-family:sans-serif;background:#e8f5e9;padding:15px}
+    .ticket{background:white;margin:15px 0;padding:15px;border-radius:10px;border-left:4px solid #2e7d32}
+    .qr{text-align:center;margin:10px 0}
+    button{background:#388e3c;color:white;border:none;padding:12px;border-radius:6px;width:100%}
+  </style>
+</head>
+<body>
+  <h2>✅ Tickets Ready!</h2>
+  <p><strong>Draw: December 31, 2025</strong></p>
+  <div id="t"></div>
+  <button onclick="window.print()">🖨️ Save/Print</button>
+
+  <script>
+    let p = new URLSearchParams(location.search);
+    let email = p.get('email') || 'user@example.com';
+    let qty = parseInt(p.get('qty')) || 1;
+    let oid = p.get('order') || 'GF2025-XXXX';
+
+    for(let i=1; i<=qty; i++) {
+      let tid = oid + '-' + (i<10?'0':'') + i;
+      let div = document.createElement('div');
+      div.className = 'ticket';
+      div.innerHTML = `
+        <h3>Grand Final Raffle</h3>
+        <p><b>ID:</b> ${tid}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Draw:</b> Dec 31, 2025</p>
+        <div class="qr" id="qr${i}"></div>
+      `;
+      document.getElementById('t').appendChild(div);
+      QRCode.toCanvas(document.getElementById('qr'+i), tid, {width:120});
+    }
+  </script>
+</body>
+</html>
