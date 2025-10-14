@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Win Electric Scooter!</title>
+  <style>
+    body{font-family:sans-serif;background:#e3f2fd;padding:15px}
+    .box{max-width:500px;margin:auto;background:white;padding:20px;border-radius:12px}
+    input,button{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:6px}
+    button{background:#1976d2;color:white;font-weight:bold}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🎉 Win an Electric Scooter!</h2>
+    <p>🎟️ Ticket: <strong>LKR 10</strong></p>
+    <p>Min: 1 | Max: 10 tickets</p>
+    <p style="color:#c62828"><strong>Draw: December 31, 2025</strong></p>
+
+    <form id="f">
+      <input type="email" id="e" placeholder="Your email" required>
+      <input type="number" id="q" min="1" max="10" value="1" placeholder="Tickets (1-10)" required>
+      <button type="submit">✅ Buy Now</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('f').onsubmit = e => {
+      e.preventDefault();
+      let email = document.getElementById('e').value;
+      let qty = document.getElementById('q').value;
+      if(qty<1||qty>10) return alert("1 to 10 tickets only!");
+      
+      let oid = 'GF2025-'+Date.now();
+      let f = document.createElement('form');
+      f.method = 'POST';
+      f.action = 'https://sandbox.payhere.lk/pay/checkout';
+      
+      let data = {
+        merchant_id: "YOUR_MERCHANT_ID",
+        return_url: location.origin+"/success.html?email="+encodeURIComponent(email)+"&qty="+qty+"&order="+oid,
+        cancel_url: location.href,
+        order_id: oid,
+        items: "Scooter Raffle x"+qty,
+        currency: "LKR",
+        amount: (10*qty).toFixed(2),
+        first_name: "Customer",
+        email: email
+      };
+      
+      Object.keys(data).forEach(k => {
+        let i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = data[k];
+        f.appendChild(i);
+      });
+      
+      document.body.appendChild(f);
+      f.submit();
+    };
+  </script>
+</body>
+</html>
